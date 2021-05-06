@@ -17,6 +17,7 @@ public:
 	const std::list<Bullet*>& getBullets();
 	const std::list<Bullet*>::iterator removeBullet(const std::list<Bullet*>::const_iterator it);
 	bool hasDiamond;
+	bool isShot;
 private:
 	std::list<Bullet*> bullets; // Bullets that are flying
 };
