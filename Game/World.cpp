@@ -2,7 +2,7 @@
 
 void World::build(size_t windowWidth, size_t windowHeight)
 {
-	//std::srand(std::time(0));
+	std::srand(1);
     for (int x = 0; x < windowWidth; x += 100)
     {
         for (int y = 0; y < windowHeight; y += 100)

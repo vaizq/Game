@@ -9,6 +9,7 @@
 #include "Bullet.h"
 #include "Diamond.h"
 #include "Base.h"
+#include "PlayerData.h"
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 720
@@ -105,32 +106,18 @@ int main()
 
 	while (window.isOpen())
 	{
-		/* Check if hero killed enemy */
-		const std::list<Bullet*> bulletList{ hero.getBullets() };
-		bool enemyGotShot;
-		sf::FloatRect enemyBounds{ enemy.getGlobalBounds() };
-		for (auto bullet : bulletList)
-		{
-			if (bullet->getGlobalBounds().intersects(enemyBounds))
-			{
-				enemyGotShot = true;
-			}
-		}
-		/* Get enemy position and send hero position out */
-		sf::Vector2f enemyPos = enemy.getPosition();
+
 		sf::Packet heroData;
+		heroData << hero; // Fill heroData
 		sf::Packet enemyData;
-		heroData << hero.getPosition().x << hero.getPosition().y << enemyGotShot;
 		if (SERVER)
 		{
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
-				enemyData >> enemyPos.x >> enemyPos.y >> hero.isShot;
-				enemy.setPosition(enemyPos);
-				if (hero.isShot)
+				enemyData >> enemy; // Fill enemys properties with enemyData
+				if (enemy.killed(hero))
 				{
-					hero.setPosition(heroBornPos);
-					hero.isShot = false;
+					hero.setPosition(hero.bornPos);
 				}
 			}
 
@@ -148,14 +135,12 @@ int main()
 
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
-				enemyData >> enemyPos.x >> enemyPos.y >> hero.isShot;
-				enemy.setPosition(enemyPos);
-				if (hero.isShot)
+				enemyData >> enemy;
+				if (enemy.killed(hero))
 				{
-					hero.setPosition(heroBornPos);
-					hero.isShot = false;
+					hero.setPosition(hero.bornPos);
 				}
-			}
+			}	
 		}
 
 		/* Handle events and move hero accordingly */
@@ -170,9 +155,12 @@ int main()
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
 					hero.shoot();
+					enemy.shoot();
+					enemy.rotate(10);
 				}
 			}
 		}
+
 
 		/* Handle movement */
 		sf::Vector2f movement(0, 0);
@@ -274,6 +262,7 @@ int main()
 			window.draw(diamond);
 		window.draw(enemy);
 		window.draw(hero);
+		enemy.drawBullets(window);
 		hero.drawBullets(window);
 		window.display();
 	}
