@@ -151,6 +151,7 @@
     <ClCompile Include="Diamond.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Diamond.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

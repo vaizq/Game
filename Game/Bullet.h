@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 
-constexpr float bulletSpeed = 3;
+constexpr float bulletSpeed = 7;
 
 class Bullet : public Entity
 {

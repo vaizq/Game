@@ -4,8 +4,8 @@
 
 constexpr float PI = 3.14159265f;
 
-Actor::Actor(const sf::Vector2f &pos, const sf::Color &color)
-	:hasDiamond(false), bornPos(pos)
+Actor::Actor(const sf::Vector2f &pos, const Base& homeBase, const sf::Color &color)
+	:hasDiamond(false), base(homeBase)
 {
 	sf::VertexArray vertices(sf::Triangles, 3);
 	vertices[0].position = sf::Vector2f(0, 0);
@@ -126,6 +126,18 @@ const std::list<Bullet*>::iterator Actor::removeBullet(const std::list<Bullet*>:
 	return bullets.erase(it);
 }
 
+sf::Vector2f Actor::getBasePos() const
+{
+	
+	return base.getPosition();
+}
+
+sf::FloatRect Actor::getBaseBounds() const
+{
+	return base.getGlobalBounds();
+}
+
+
 bool Actor::killed(const Actor& enemy)
 {
 	const sf::FloatRect& enemyBounds(enemy.getGlobalBounds());
@@ -141,7 +153,7 @@ bool Actor::killed(const Actor& enemy)
 sf::Packet& operator<<(sf::Packet& packet, Actor& player)
 {
 	packet << player.getPosition().x << player.getPosition().y;
-	
+	packet << player.getRotation();
 	packet << player.bulletCount();
 	for (auto bullet : player.getBullets())
 		packet << bullet->getPosition().x << bullet->getPosition().y << bullet->getVelo().x << bullet->getVelo().y;
@@ -153,8 +165,10 @@ sf::Packet& operator>>(sf::Packet& packet, Actor& player)
 {
 	sf::Vector2f newPos;
 	packet >> newPos.x >> newPos.y;
-	std::cout << newPos.x << " " << newPos.y << std::endl;
 	player.setPosition(newPos);
+	float rotation;
+	packet >> rotation;
+	player.setRotation(rotation);
 	
 	size_t bulletCount;
 	packet >> bulletCount;

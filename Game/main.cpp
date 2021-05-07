@@ -9,12 +9,13 @@
 #include "Bullet.h"
 #include "Diamond.h"
 #include "Base.h"
+#include "score.h"
 
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 720
 constexpr float PI = (float)3.14159265;
-#define SPEED 0.5
+#define SPEED 2
 
 constexpr bool SERVER = true; 
 constexpr int PORT = 53000;
@@ -24,6 +25,7 @@ int main()
 {
 	World world;
 	world.build(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Score scoreBoard{};
 
 	/* Initialize hero and enemy depending is this 'server' or 'client' machine*/
 	sf::Vector2f heroBornPos;
@@ -45,10 +47,9 @@ int main()
 		enemyBornPos = 	sf::Vector2f(20, 20);
 		enemyColor = sf::Color::Blue;
 	}
-	Actor hero(heroBornPos, heroColor);
-	Actor enemy(enemyBornPos, enemyColor);
 
 	Diamond diamond(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), sf::Color::Blue);
+
 	sf::Vector2f pBasePos;
 	sf::Vector2f eBasePos;
 	if (SERVER)
@@ -61,10 +62,13 @@ int main()
 		pBasePos = sf::Vector2f(WINDOW_WIDTH - 40, WINDOW_HEIGHT - 90);
 		eBasePos = sf::Vector2f(10, 10);
 	}
-
 	Base playerBase(pBasePos, sf::Color::Red);
 	Base enemyBase(eBasePos, sf::Color::Red);
-	
+
+	Actor hero(heroBornPos, playerBase, heroColor);
+	Actor enemy(enemyBornPos, enemyBase, enemyColor);
+
+
 	/* Connect with client and server */
 	sf::TcpListener listener;
 	if (SERVER)
@@ -100,7 +104,6 @@ int main()
 			std::cout << "Connected succesfully" << std::endl;
 		}
 	}
-	socket.setBlocking(false);
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Shoot em all");
 
@@ -116,20 +119,19 @@ int main()
 				enemyData >> enemy; // Fill enemys properties with enemyData
 				if (enemy.killed(hero))
 				{
-					hero.setPosition(hero.bornPos);
+					hero.hasDiamond = false;
+					hero.setPosition(hero.getBasePos());
 				}
 			}
 
 			if (socket.send(heroData) != sf::Socket::Done)
 			{
-				std::cout << "Failed to send data to client" << std::endl;
 			}
 		}
 		else
 		{
 			if (socket.send(heroData) != sf::Socket::Done)
 			{
-				std::cout << "Failed to send data to Server" << std::endl;
 			}
 
 			if (socket.receive(enemyData) == sf::Socket::Done)
@@ -137,7 +139,8 @@ int main()
 				enemyData >> enemy;
 				if (enemy.killed(hero))
 				{
-					hero.setPosition(hero.bornPos);
+					enemy.hasDiamond = false;
+					hero.setPosition(hero.getBasePos());
 				}
 			}	
 		}
@@ -243,6 +246,16 @@ int main()
 			enemy.hasDiamond = true;
 		if (enemy.getGlobalBounds().intersects(enemyBase.getGlobalBounds()))
 			enemy.hasDiamond = false;
+
+		/* Update score */
+		if (hero.hasDiamond && hero.getGlobalBounds().intersects(hero.getBaseBounds()))
+		{
+			scoreBoard.player++;
+		}
+		if (enemy.hasDiamond && enemy.getBaseBounds().intersects(enemy.getBaseBounds()))
+		{
+			scoreBoard.enemy++;
+		}
 
 		window.clear();
 		world.draw(window);
