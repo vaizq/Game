@@ -123,10 +123,11 @@ bool Actor::killed(const Actor& enemy)
 sf::Packet& operator<<(sf::Packet& packet, Actor& player)
 {
 	packet << player.getPosition().x << player.getPosition().y;
+	/*
 	packet << player.bulletCount();
 	for (auto bullet : player.getBullets())
 		packet << bullet->getPosition().x << bullet->getPosition().y << bullet->getVelo().x << bullet->getVelo().y;
-
+*/
 	return packet;
 }
 
@@ -135,7 +136,7 @@ sf::Packet& operator>>(sf::Packet& packet, Actor& player)
 	sf::Vector2f newPos;
 	packet >> newPos.x >> newPos.y;
 	player.setPosition(newPos);
-	size_t bulletCount;
+	/*size_t bulletCount;
 	packet >> bulletCount;
 
 	player.clearBullets();
@@ -145,7 +146,9 @@ sf::Packet& operator>>(sf::Packet& packet, Actor& player)
 		packet >> pos.x >> pos.y >> velo.x >> velo.y;
 		player.shoot(pos, velo);// 'Shoots': bullet starts moving from pos and moves with velo
 	}
+	*/
 	return packet;
+	
 }
 
 bool killed(const Actor& player, const Actor& enemy)
