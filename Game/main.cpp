@@ -100,7 +100,7 @@ int main()
 			std::cout << "Connected succesfully" << std::endl;
 		}
 	}
-	socket.setBlocking(false);
+	//socket.setBlocking(false);
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Shoot em all");
 
@@ -114,7 +114,6 @@ int main()
 		{
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
-				std::cout << "Server received data" << std::endl;
 				enemyData >> enemy; // Fill enemys properties with enemyData
 				if (enemy.killed(hero))
 				{
@@ -136,7 +135,6 @@ int main()
 
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
-				std::cout << "Client received data" << std::endl;
 				enemyData >> enemy;
 				if (enemy.killed(hero))
 				{
