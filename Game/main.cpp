@@ -9,7 +9,7 @@
 #include "Bullet.h"
 #include "Diamond.h"
 #include "Base.h"
-#include "PlayerData.h"
+
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 720
@@ -155,8 +155,6 @@ int main()
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
 					hero.shoot();
-					enemy.shoot();
-					enemy.rotate(10);
 				}
 			}
 		}
