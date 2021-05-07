@@ -33,6 +33,7 @@ int main()
 	sf::Color heroColor;
 	sf::Color enemyColor;
 
+	
 	if (SERVER)
 	{
 		heroBornPos = sf::Vector2f(20, 20);
@@ -107,6 +108,7 @@ int main()
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Shoot em all");
 
+	/* Gameloop :D */
 	while (window.isOpen())
 	{
 		sf::Packet heroData;
