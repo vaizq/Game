@@ -16,9 +16,9 @@
 constexpr float PI = (float)3.14159265;
 #define SPEED 0.5
 
-constexpr bool SERVER = false; 
+constexpr bool SERVER = true; 
 constexpr int PORT = 53000;
-constexpr const char* IP_ADDRESS = "192.168.43.128";
+constexpr const char* IP_ADDRESS = "192.168.1.38";
 
 int main()
 {
@@ -114,6 +114,7 @@ int main()
 		{
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
+				std::cout << "Server received data" << std::endl;
 				enemyData >> enemy; // Fill enemys properties with enemyData
 				if (enemy.killed(hero))
 				{
@@ -135,6 +136,7 @@ int main()
 
 			if (socket.receive(enemyData) == sf::Socket::Done)
 			{
+				std::cout << "Client received data" << std::endl;
 				enemyData >> enemy;
 				if (enemy.killed(hero))
 				{
@@ -264,6 +266,8 @@ int main()
 		hero.drawBullets(window);
 		window.display();
 	}
+
+	window.close();
 
 	return 0;
 }

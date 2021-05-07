@@ -52,7 +52,7 @@ void Actor::drawBullets(sf::RenderWindow& window)
 		if (bulletPos.x < 0 || bulletPos.y < 0 ||
 			bulletPos.x >= window.getSize().x || bulletPos.y > window.getSize().y)
 		{
-			bullets.erase(it);
+			it = bullets.erase(it);
 		}
 		else
 		{
