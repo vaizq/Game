@@ -15,7 +15,7 @@
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 720
 constexpr float PI = (float)3.14159265;
-#define SPEED 2
+#define SPEED 1
 
 constexpr bool SERVER = true; 
 constexpr int PORT = 53000;
@@ -24,7 +24,7 @@ constexpr const char* IP_ADDRESS = "192.168.1.38";
 int main()
 {
 	World world;
-	world.build(WINDOW_WIDTH, WINDOW_HEIGHT);
+	world.build(WINDOW_WIDTH, WINDOW_HEIGHT, Map::Space);
 	Score scoreBoard{};
 
 	/* Initialize hero and enemy depending is this 'server' or 'client' machine*/
@@ -238,6 +238,32 @@ int main()
 		/* Handle collisions with world and bullets */
 		hero.checkCollisions(world);
 		
+
+		/* Update score */
+		bool scoreUpdated{ false };
+		if (hero.hasDiamond && hero.getGlobalBounds().intersects(hero.getBaseBounds()))
+		{
+			scoreBoard.player++;
+			scoreUpdated = true;
+		}
+		if (enemy.hasDiamond && enemy.getGlobalBounds().intersects(enemy.getBaseBounds()))
+		{
+			scoreBoard.enemy++;
+			scoreUpdated = true;
+		}
+		if (scoreUpdated)
+		{
+			if (scoreBoard.player == scoreBoard.enemy)
+			{
+				std::cout << "Game is tied!" << std::endl;
+			}
+			else
+			{
+				std::cout << "You are " << ((scoreBoard.player > scoreBoard.enemy) ? "winning by " : "losing by ") <<
+						   	 abs(scoreBoard.player - scoreBoard.enemy) << " points" << std::endl;
+			}
+		}
+
 		if (hero.getGlobalBounds().intersects(diamond.getGlobalBounds()) && 
 			!enemy.hasDiamond)
 			hero.hasDiamond = true;
@@ -249,15 +275,6 @@ int main()
 		if (enemy.getGlobalBounds().intersects(enemyBase.getGlobalBounds()))
 			enemy.hasDiamond = false;
 
-		/* Update score */
-		if (hero.hasDiamond && hero.getGlobalBounds().intersects(hero.getBaseBounds()))
-		{
-			scoreBoard.player++;
-		}
-		if (enemy.hasDiamond && enemy.getBaseBounds().intersects(enemy.getBaseBounds()))
-		{
-			scoreBoard.enemy++;
-		}
 
 		window.clear();
 		world.draw(window);

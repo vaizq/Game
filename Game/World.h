@@ -3,11 +3,20 @@
 #include <vector>
 #include "Entity.h"
 
+enum class Map
+{
+	Heaven,
+	Hell,
+	Earth,
+	Space,
+	Moon,
+	Alasateri
+};
 
 class World
 {
 public:
-	void build(size_t windowWidth, size_t windowHeight);
+	void build(size_t windowWidth, size_t windowHeight, Map map);
 	void addWall(sf::RectangleShape wallRect);
 	bool collides(const Entity &e);
 	const sf::RectangleShape* collidesWith(const Entity& e) const;

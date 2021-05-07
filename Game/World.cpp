@@ -1,8 +1,8 @@
 #include "World.h"
 
-void World::build(size_t windowWidth, size_t windowHeight)
+void World::build(size_t windowWidth, size_t windowHeight, Map map)
 {
-	std::srand(1);
+	std::srand((int)map);
     for (int x = 0; x < windowWidth; x += 100)
     {
         for (int y = 0; y < windowHeight; y += 100)
