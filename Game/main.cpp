@@ -106,7 +106,6 @@ int main()
 
 	while (window.isOpen())
 	{
-
 		sf::Packet heroData;
 		heroData << hero; // Fill heroData
 		sf::Packet enemyData;
@@ -123,14 +122,14 @@ int main()
 
 			if (socket.send(heroData) != sf::Socket::Done)
 			{
-				//std::cout << "Client failed to receive data" << std::endl;
+				std::cout << "Failed to send data to client" << std::endl;
 			}
 		}
 		else
 		{
 			if (socket.send(heroData) != sf::Socket::Done)
 			{
-				//std::cout << "Server failed to receive data" << std::endl;
+				std::cout << "Failed to send data to Server" << std::endl;
 			}
 
 			if (socket.receive(enemyData) == sf::Socket::Done)
