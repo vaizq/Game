@@ -46,18 +46,20 @@ void Actor::shoot(const sf::Vector2f& pos, const sf::Vector2f& velo)
 /* Draw and move bullets */
 void Actor::drawBullets(sf::RenderWindow& window)
 {
-	for (auto it = bullets.begin(); it != bullets.end(); it++)
+	for (auto it = bullets.begin(); it != bullets.end();)
 	{
 		sf::Vector2f bulletPos = (*it)->getPosition();
 		if (bulletPos.x < 0 || bulletPos.y < 0 ||
 			bulletPos.x >= window.getSize().x || bulletPos.y > window.getSize().y)
 		{
+			delete* it;
 			it = bullets.erase(it);
 		}
 		else
 		{
 			(*it)->move((*it)->getVelo());
 			window.draw(**it);
+			it++;
 		}
 	}
 }
@@ -68,6 +70,22 @@ void Actor::clearBullets()
 	{
 		delete bullets.front();
 		bullets.pop_front();
+	}
+}
+
+void Actor::checkCollisions(const World& world)
+{
+	for (auto it = bullets.begin(); it != bullets.end();)
+	{
+		if (world.collidesWith(**it))
+		{
+			delete* it;
+			it = bullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 

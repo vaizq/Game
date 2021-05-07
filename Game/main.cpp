@@ -100,7 +100,7 @@ int main()
 			std::cout << "Connected succesfully" << std::endl;
 		}
 	}
-	//socket.setBlocking(false);
+	socket.setBlocking(false);
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Shoot em all");
 
@@ -232,15 +232,8 @@ int main()
 		}
 
 		/* Handle collisions with world and bullets */
-		const std::list<Bullet*> &bullets = hero.getBullets();
-		for (auto it = bullets.begin(); it != bullets.end(); ++it)
-		{
-			if (world.collidesWith(**it))
-			{
-				it = hero.removeBullet(it);
-			}
-		}
-
+		hero.checkCollisions(world);
+		
 		if (hero.getGlobalBounds().intersects(diamond.getGlobalBounds()) && 
 			!enemy.hasDiamond)
 			hero.hasDiamond = true;

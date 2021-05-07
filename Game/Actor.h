@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Bullet.h"
+#include "World.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <list>
@@ -16,6 +17,7 @@ public:
 	void shoot(const sf::Vector2f& pos, const sf::Vector2f& velo);
 	void drawBullets(sf::RenderWindow &window);
 	void clearBullets();
+	void checkCollisions(const World& world);
 	sf::FloatRect getGlobalBounds() const override;
 	const std::list<Bullet*>& getBullets() const;
 	std::size_t bulletCount()const { return bullets.size(); };
@@ -23,6 +25,7 @@ public:
 	bool hasDiamond;
 	const sf::Vector2f bornPos;
 	bool killed(const Actor& enemy);
+
 
 private:
 	std::list<Bullet*> bullets; // Bullets that are flying

@@ -57,7 +57,7 @@ bool World::collides(const Entity &e)
 /* Returns wall(Rectangle shape) of witch entity collides with 
    nullptr if no collisions.                                     
 */
-const sf::RectangleShape* World::collidesWith(const Entity& e)
+const sf::RectangleShape* World::collidesWith(const Entity& e)const
 {
     sf::FloatRect entityBounds = e.getGlobalBounds();
     for (const auto &wall : walls)
